@@ -1,5 +1,7 @@
 package com.back.domain.post.post.controller;
 
+import com.back.domain.member.entity.Member;
+import com.back.domain.member.service.MemberService;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
@@ -23,9 +25,10 @@ import java.util.List;
 public class ApiV1PostController {
 
     private final PostService postService;
+    private final MemberService memberService;
 
-    @GetMapping(produces= MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary="글 다건 조회")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "글 다건 조회")
     public List<PostDto> list() {
         List<Post> result = postService.findAll();
 
@@ -37,7 +40,7 @@ public class ApiV1PostController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary="글 단건 조회")
+    @Operation(summary = "글 단건 조회")
     public PostDto detail(@PathVariable int id) {
 
         Post post = postService.findById(id).get();
@@ -62,9 +65,11 @@ public class ApiV1PostController {
     }
 
     @PostMapping
-    @Operation(summary="글 작성")
+    @Operation(summary = "글 작성")
     public RsData<PostWriteResBody> write(@RequestBody @Valid PostWriteReqBody reqBody) {
-        Post post = postService.write(reqBody.title, reqBody.content);
+        Member actor = memberService.findByUsername("user1").get();
+
+        Post post = postService.write(actor, reqBody.title, reqBody.content);
         long postsCount = postService.count();
 
         return new RsData<>(
@@ -95,7 +100,7 @@ public class ApiV1PostController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary="글 수정")
+    @Operation(summary = "글 수정")
     @Transactional
     public RsData<PostModifyResBody> modify(
             @PathVariable int id,
@@ -114,7 +119,7 @@ public class ApiV1PostController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary="글 삭제")
+    @Operation(summary = "글 삭제")
     public RsData<Void> delete(
             @PathVariable int id
     ) {
