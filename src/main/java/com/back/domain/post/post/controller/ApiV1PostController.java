@@ -5,6 +5,7 @@ import com.back.domain.member.service.MemberService;
 import com.back.domain.post.post.dto.PostDto;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
+import com.back.global.exception.ServiceException;
 import com.back.global.rsData.RsData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,7 +73,8 @@ public class ApiV1PostController {
             @RequestParam @NotBlank @Size(min = 2, max = 30) String password
     ) {
         Member actor = memberService.findByUsername(username).get();
-        if (!actor.getPassword().equals(password)) throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+
+        if (!actor.getPassword().equals(password)) throw new ServiceException("401-1", "비밀번호가 일치하지 않습니다.");
 
         Post post = postService.write(actor, reqBody.title, reqBody.content);
         long postsCount = postService.count();
@@ -86,7 +88,6 @@ public class ApiV1PostController {
                 )
         );
     }
-
 
     record PostModifyReqBody(
             @Size(min = 2, max = 10, message = "03-title-제목은 2자 이상 10자 이하로 입력해주세요.")

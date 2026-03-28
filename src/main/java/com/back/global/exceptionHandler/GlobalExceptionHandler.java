@@ -1,5 +1,6 @@
 package com.back.global.exceptionHandler;
 
+import com.back.global.exception.ServiceException;
 import com.back.global.rsData.RsData;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -7,17 +8,22 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+/**
+ * 애플리케이션 전역에서 발생한 예외를 처리하는 핸들러.
+ * 예외를 공통 응답 형식으로 변환하여 반환한다.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseBody
-    public RsData<Void> handleException(){
+    public RsData<Void> handleException() {
         return new RsData<Void>(
                 "존재하지 않는 데이터입니다.",
                 "404-1"
@@ -48,6 +54,21 @@ public class GlobalExceptionHandler {
         return new RsData<Void>(
                 "잘못된 형식의 요청 데이터입니다.",
                 "400-2"
+        );
+    }
+
+    @ExceptionHandler(ServiceException.class)
+    @ResponseBody
+    public RsData<Void> handleException(ServiceException e) {
+        return e.getRsData();
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    @ResponseBody
+    public RsData<Void> handleException(HandlerMethodValidationException e) {
+        return new RsData<Void>(
+                "잘못된 파라미터 요청입니다.",
+                "400-4"
         );
     }
 }
