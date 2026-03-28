@@ -31,6 +31,19 @@ public class BaseInitData {
     }
 
     @Transactional
+    public void work1() { // DB에 회원 없으면 초기 기본 데이터 넣기 (회원 생성)
+        if(memberService.count() > 0) {
+            return;
+        }
+
+        memberService.join("system", "system", "시스템");
+        memberService.join("admin", "admin", "운영자");
+        memberService.join("user1", "1234", "유저1");
+        memberService.join("user2", "1234", "유저2");
+        memberService.join("user3", "1234", "유저3");
+    }
+
+    @Transactional
     public void work2() { // 회원을 조회해서 글, 댓글 생성
         if(postService.count() > 0) {
             return;
@@ -49,18 +62,5 @@ public class BaseInitData {
         post1.addComment(author1, "댓글 1-3");
         post2.addComment(author2, "댓글 2-1");
         post2.addComment(author2, "댓글 2-2");
-    }
-
-    @Transactional
-    public void work1() { // DB에 회원 없으면 초기 기본 데이터 넣기 (회원 생성)
-        if(memberService.count() > 0) {
-            return;
-        }
-
-        memberService.join("system", "system", "시스템");
-        memberService.join("admin", "admin", "운영자");
-        memberService.join("user1", "1234", "유저1");
-        memberService.join("user2", "1234", "유저2");
-        memberService.join("user3", "1234", "유저3");
     }
 }

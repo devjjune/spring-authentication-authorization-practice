@@ -8,7 +8,7 @@ public record PostDto(
         int id,
         String title,
         String content,
-        int authorID,
+        int authorId,
         String authorName,
         LocalDateTime createDate,
         LocalDateTime modifyDate
