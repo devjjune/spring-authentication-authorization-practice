@@ -34,7 +34,7 @@ public class BaseInitData {
     public void work1() { // DB에 회원 없으면 초기 기본 데이터 넣기 (회원 생성)
         if(memberService.count() > 0) {
             return;
-        }
+        } // 최초 한 번만 샘플 데이터 생성 (안에 데이터가 있으면 초기화X)
 
         memberService.join("system", "system", "시스템");
         memberService.join("admin", "admin", "운영자");
