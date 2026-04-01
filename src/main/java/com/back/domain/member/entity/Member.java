@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Entity
 @Getter // Setter는 엔티티에 비추
 @NoArgsConstructor
@@ -20,11 +18,11 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String apiKey;
 
-    public Member(String username, String password, String nickname) {
+    public Member(String username, String password, String nickname, String apiKey) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
-        this.apiKey = UUID.randomUUID().toString(); // apiKey 값 부여 (의미 없고 무작위한 값으로)
+        this.apiKey = apiKey;
     }
 
     public String getName() {
