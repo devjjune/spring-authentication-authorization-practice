@@ -56,7 +56,8 @@ public class ApiV1MemberController {
 
     // 로그인 성공 시 발급된 인증 정보(apiKey)를 응답으로 전달하기 위한 DTO
     record MemberLoginResBody(
-            String apiKey
+            String apiKey,
+            String accessToken
     ) {
     }
 
@@ -73,10 +74,16 @@ public class ApiV1MemberController {
 
         rq.addCookie("apiKey", actor.getApiKey());
 
+        String accessToken = memberService.genAccessToken(actor);
+        rq.addCookie("accessToken", accessToken);
+
         return new RsData(
                 "%s님 환영합니다.".formatted(actor.getName()),
                 "200-1",
-                new MemberLoginResBody(actor.getApiKey())
+                new MemberLoginResBody(
+                        actor.getApiKey(),
+                        accessToken
+                )
         );
     }
 
