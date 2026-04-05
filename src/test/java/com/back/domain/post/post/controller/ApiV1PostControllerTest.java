@@ -152,18 +152,16 @@ public class ApiV1PostControllerTest {
         String title = "제목입니다";
         String content = "내용입니다";
 
-        Member author = memberRepository.findByUsername("user1").get();
-
         ResultActions resultActions = mvc
                 .perform(
                         post("/api/v1/posts")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content("""
-                                        {
-                                            "title": "%s",
-                                            "content": "%s"
-                                        }
-                                        """.formatted(title, content))
+                                    {
+                                        "title": "%s",
+                                        "content": "%s"
+                                    }
+                                    """.formatted(title, content))
                 )
                 .andDo(print());
 
@@ -172,7 +170,7 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().methodName("write"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.resultCode").value("401-1"))
-                .andExpect(jsonPath("$.msg").value("인증 정보가 헤더에 존재하지 않습니다."));
+                .andExpect(jsonPath("$.msg").value("인증 정보가 존재하지 않습니다."));
     }
 
 
@@ -353,8 +351,8 @@ public class ApiV1PostControllerTest {
                 .andExpect(handler().handlerType(ApiV1PostController.class))
                 .andExpect(handler().methodName("write"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.resultCode").value("401-1"))
-                .andExpect(jsonPath("$.msg").value("유효하지 않은 API 키입니다."));
+                .andExpect(jsonPath("$.resultCode").value("401-4"))
+                .andExpect(jsonPath("$.msg").value("API 키가 유효하지 않습니다."));
     }
 
     @Test
